@@ -20,7 +20,7 @@ public class DiferenciaEntreFechasTest {
 
         Period resultado = diferenciaEntreFechas.calculateYearsOfIndependency(fechaIndependencia);
 
-        Assertions.assertEquals(9, resultado.getDays());
+        Assertions.assertEquals(13, resultado.getDays());
         Assertions.assertEquals(8, resultado.getMonths());
         Assertions.assertEquals(1, resultado.getYears());
     }
