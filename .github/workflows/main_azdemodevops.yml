@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -19,14 +19,11 @@ jobs:
       - name: Set up Java version
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: 'java21'
           distribution: 'microsoft'
 
       - name: Build with Maven
         run: mvn clean install
-
-      - name: List files in target directory (debugging)
-        run: dir ${{ github.workspace }}/target
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -35,7 +32,7 @@ jobs:
           path: '${{ github.workspace }}/target/*.war'
 
   deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: build
     environment:
       name: 'Production'
@@ -48,16 +45,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: java-app
-
-      - name: List files after downloading artifact (debugging)
-        run: dir ${{ github.workspace }}
-
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_0918435E3C584D24A50D9CBD2D86FE7A }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_168AF49518CC48DEA74F33400FA19BBC }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_868647B696DA4709B84D17B092EA39AD }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_F812722C4B1844F5B24A9CB0026C852C }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F6A27BDD43A74BB9A5C25CA140637CB7 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_952FDC5D515C49A2B68802F0C83EA79C }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -65,4 +59,5 @@ jobs:
         with:
           app-name: 'azdemodevops'
           slot-name: 'Production'
-          package: '${{ github.workspace }}/java-app/*.war'  # Ruta completa al artefacto
+          package: '*.war'
+          
